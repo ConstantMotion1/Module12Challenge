@@ -123,7 +123,7 @@ addEmployee = () => {
 })
 };
 
-updateEmpRole = async () => {
+updateEmpRole = () => {
     viewAllEmp1()
     inquirer
         .prompt ([
@@ -161,7 +161,70 @@ viewAllEmp1 = () => {
     })
 };
 
+viewAllDept1 = () => {
+    db.query('SELECT * FROM departments', function(err, results) {
+        if (err) {
+            console.log(err)
+        } else {
+            console.table(results)
+        
+        }
+    })
+};
 
+
+addRole = () => {
+    viewAllDept1();
+    inquirer
+        .prompt([
+            {
+                type:'input',
+                message: 'Enter title of the role',
+                name: 'title'
+            },
+            {
+                type: 'input',
+                message: 'Enter salary of role',
+                name: 'salary'
+            },
+            {
+                type: 'input',
+                message: 'Enter department id',
+                name: 'department'
+            }
+        ])
+        .then((response) => {
+            db.query(`INSERT INTO roles (title, salary, department_id) VALUES ('${response.title}', '${response.salary}', '${response.department}')`,  function(err, results) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.table(results)
+                    mainQuery()
+                }
+        })
+    });
+};
+
+addDept = () => {
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                message: 'Enter name of new department',
+                name: 'dept'
+            }
+        ])
+        .then((response) => {
+            db.query(`INSERT INTO departments (name) VALUES ('${response.dept}')`, function(err, results) {
+                if (err) {
+                    console.log(err)
+                } else {
+                    console.table(results)
+                    mainQuery()
+                }
+            })
+        })
+};
 
 mainQuery()
 
